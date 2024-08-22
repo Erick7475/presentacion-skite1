@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación de Menú y Videos</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #738000, #ffbb00, #ffee00, #044622, #2bff00);
+            background-size: 500% 500%; /* Tamaño grande para la animación del gradiente */
+            animation: gradientAnimation 15s ease infinite; /* Animación continua del gradiente */
+            overflow: hidden;
+        }
+        #container {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #menu, video {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: opacity 1s ease-in-out;
+        }
+        #menu {
+            z-index: 1; /* Asegura que la imagen del menú esté sobre los videos */
+        }
+        video {
+            display: none; /* Los videos están ocultos inicialmente */
+        }
+        /* Animación del fondo degradado */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Imagen del menú -->
+        <img id="menu" src="menu.jpg" alt="Menú">
+
+        <!-- Videos -->
+        <video id="video1" controls>
+            <source src="video.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+        <video id="video2" controls>
+            <source src="vaso.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+        <video id="video3" controls>
+            <source src="bandeja.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+        <video id="video4" controls>
+            <source src="skite1.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+        <video id="video5" controls>
+            <source src="skite2.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
+        </video>
+    </div>
+
+    <script>
+        // Tiempo que se muestra la imagen del menú (en milisegundos)
+        const tiempoMenu = 5000; // 5 segundos
+        let videos = ["video1", "video2", "video3", "video4", "video5"];
+        let currentVideoIndex = 0;
+
+        // Función para mezclar el orden de los videos
+        function shuffleVideos() {
+            for (let i = videos.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [videos[i], videos[j]] = [videos[j], videos[i]];
+            }
+        }
+
+        function playNextVideo() {
+            if (currentVideoIndex < videos.length) {
+                const video = document.getElementById(videos[currentVideoIndex]);
+                video.style.display = "block";
+                video.style.opacity = "1";
+                video.play();
+
+                video.onended = function() {
+                    video.style.opacity = "0";
+                    setTimeout(() => {
+                        video.style.display = "none";
+                        currentVideoIndex++;
+                        playNextVideo();
+                    }, 1000); // Tiempo de espera para la transición de opacidad
+                };
+            } else {
+                // Reiniciar el ciclo de videos
+                currentVideoIndex = 0;
+                shuffleVideos(); // Mezclar el orden de los videos para la próxima iteración
+                showMenu(); // Volver a mostrar el menú después de los videos
+            }
+        }
+
+        function showMenu() {
+            document.getElementById('menu').style.display = 'block';
+            document.getElementById('menu').style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('menu').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('menu').style.display = 'none';
+                    playNextVideo(); // Comenzar a reproducir videos nuevamente
+                }, 1000); // Tiempo de espera para la transición de opacidad
+            }, tiempoMenu); // Tiempo que se muestra la imagen del menú
+        }
+
+        // Inicialmente, mostrar el menú y luego empezar a reproducir videos
+        showMenu();
+    </script>
+</body>
+</html>
